@@ -4,7 +4,6 @@
 int main() {
     std::shared_ptr<int> p_x(new int);
     std::cout << "p_x use count: " << p_x.use_count() << "\n";
-
     *p_x = 5;
     std::cout << "*p_x = " << *p_x << "\n\n";
 
@@ -18,7 +17,8 @@ int main() {
     std::cout << "  p_x use count: " << p_x.use_count() << "\n";
     std::cout << "  w.expired()? " << std::boolalpha << w.expired() << "\n";
 
-    if (auto sp = w.lock()) {
+    std::shared_ptr<int> sp = w.lock();
+    if (sp) {
         std::cout << "  *w.lock() = " << *sp << " (value is still alive)\n\n";
     } else {
         std::cout << "  w.lock() failed; resource gone\n\n";
@@ -31,10 +31,11 @@ int main() {
 
     p_x.reset();
     std::cout << "after p_x.reset();\n";
-    std::cout << "  p_x use count: " << p_x.use_count() << "\n"; // 0
+    std::cout << "  p_x use count: " << p_x.use_count() << "\n";
     std::cout << "  w.expired()? " << w.expired() << "\n";
 
-    if (auto sp2 = w.lock()) {
+    std::shared_ptr<int> sp2 = w.lock();
+    if (sp2) {
         std::cout << "  *w.lock() = " << *sp2 << "\n";
     } else {
         std::cout << "  w.lock() failed: the resource has been destroyed\n";
